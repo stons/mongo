@@ -9,7 +9,8 @@ RUN apt -y update && \
 	apt -y clean && \
     apt -y autoclean && \
     apt -y autoremove 
-
+ENV DATA_PATH="/data/mongo/mongodb-data" 
+ENV LOG_PATH="/data/mongo/mongodb-log/db.log" 
 ENV MONGO_OPTION=" --fork --dbpath $DATA_PATH --logpath $LOG_PATH"
 ENV MONGO_BASH mongo_start
 COPY ./$MONGO_BASH /etc/rc.d/init.d/$MONGO_BASH
@@ -19,8 +20,8 @@ ENV MONGO_DIR="mongodb-linux-x86_64-ubuntu1804-4.0.2"
 ENV MONGO_DOWNLOAD_FILE="$MONGO_DIR.tgz" 
 ENV MONGO_DOWNLOAD_URL="https://fastdl.mongodb.org/linux/$MONGO_DOWNLOAD_FILE"
 ENV MONGO_INSTALL_PATH="/opt/mongo/$MONGO_DIR" 
-ENV DATA_PATH="/data/mongo/mongodb-data" 
-ENV LOG_PATH="/data/mongo/mongodb-log/db.log" 
+
+
  #environment variable editor
 ENV PATH="$MONGO_INSTALL_PATH/bin:$PATH"
 
