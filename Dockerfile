@@ -2,6 +2,14 @@
 FROM sxzt/ubuntu:latest
 MAINTAINER sxzt sjzt2513@163.com
 
+RUN apt -y update && \
+	apt -y upgrade && \
+	apt -y install curl && \
+	apt -y snmpd snmp snmp-mibs-downloader && \
+	apt -y clean && \
+    apt -y autoclean && \
+    apt -y autoremove 
+
 ENV MONGO_OPTION=" --fork --dbpath $DATA_PATH --logpath $LOG_PATH"
 ENV MONGO_BASH mongo_start
 COPY ./$MONGO_BASH /etc/rc.d/init.d/$MONGO_BASH
