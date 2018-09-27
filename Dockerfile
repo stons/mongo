@@ -5,7 +5,7 @@ MAINTAINER sxzt sjzt2513@163.com
 RUN apt -y update && \
 	apt -y upgrade && \
 	apt -y install curl && \
-	apt -y snmpd snmp snmp-mibs-downloader && \
+	apt -y install snmpd snmp snmp-mibs-downloader && \
 	apt -y clean && \
     apt -y autoclean && \
     apt -y autoremove 
