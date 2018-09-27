@@ -1,0 +1,82 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          mongodb
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: mongodb
+# Description:       mongodb
+### END INIT INFO
+
+## 命令名称
+PROG="mongod"
+## 安装路径
+PROG_PATH="$MONGO_INSTALL_PATH" 
+
+## 一些参数
+PROG_ARGS="$MONGO_OPTION"
+## 存储进程号的PID文件保存的目录
+PID_PATH="/var/run/"
+
+## 定义启动函数
+start() {
+    ## 如果pid文件存在，认为已经存在一个进程
+    if [ -e "$PID_PATH/$PROG.pid" ]; then
+        echo "Error! $PROG is currently running!" 1>&2
+        exit 1
+    else
+## 启动命令，错误重定向输出到/var/log/目录下
+        $PROG_PATH/bin/$PROG $PROG_ARGS 2>&1 >/var/log/$PROG &
+    pid=`ps ax | grep -i 'bin/mongod' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`
+
+        echo "$PROG started"
+## 获取进程号存到pid文件中
+        echo $pid > "$PID_PATH/$PROG.pid"
+    fi
+}
+
+## 定义关闭函数
+stop() {
+    echo "begin stop"
+    if [ -e "$PID_PATH/$PROG.pid" ]; then
+        ## kill掉进程
+    pid=`ps ax | grep -i 'bin/mongod' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`
+    kill $pid
+    ## 删除pid文件
+        rm -f  "$PID_PATH/$PROG.pid"
+        echo "$PROG stopped"
+    else
+        echo "Error! $PROG not started!" 1>&2
+        exit 1
+    fi
+}
+
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+case "$1" in
+    start)
+        start
+        exit 0
+    ;;
+    stop)
+        stop
+        exit 0
+    ;;
+    reload|restart|force-reload)
+        stop
+        start
+        exit 0
+    ;;
+    **)
+        echo "Usage: $0 {start|stop|reload}" 1>&2
+        exit 1
+    ;;
+esac
+
+exit 0
+
