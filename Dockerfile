@@ -40,6 +40,7 @@ WORKDIR /etc/rc.d/init.d
 RUN chmod 777 $MONGO_BASH 
 #    update-rc.d $MONGO_BASH defaults
 
+EXPOSE 27017
 
 # docker run -dti --name xxx -v /x/xx:/data/mongo/mongodb-data sxzt/mongo
 
